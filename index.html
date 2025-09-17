@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekend Premier League 2025, Captain Polling</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #0d47a1; /* India jersey blue */
+      color: #fff;
+    }
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: #1565c0;
+      padding: 25px 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    h1 {
+      font-size: 1.5em;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ffcc00;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #fff;
+    }
+    input[type="text"], input[type="tel"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      outline: none;
+    }
+    input[type="text"]:focus, input[type="tel"]:focus {
+      border: 2px solid #ff9800;
+    }
+    .checkbox-group {
+      margin-top: 10px;
+      background: #0d47a1;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .checkbox-option {
+      display: block;
+      margin: 8px 0;
+      font-size: 1em;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .checkbox-option input {
+      margin-right: 10px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff5722, #ff9800);
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover:enabled {
+      background: linear-gradient(90deg, #e64a19, #ff6f00);
+    }
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+    .success {
+      text-align: center;
+      color: #00e676;
+      font-weight: bold;
+      margin-top: 20px;
+      display: none;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏏 Weekend Premier League 2025 🏏  Captain Polling</h1>
+    <form id="pollForm">
+      <label for="playerName">Your Name:</label>
+      <input type="text" id="playerName" name="playerName" required>
+
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter 10 digit phone number" pattern="[0-9]{10}" required>
+
+      <label>Select Your Captain Choices (1 to 3):</label>
+      <div class="checkbox-group">
+        <label class="checkbox-option"><input type="checkbox" name="captains" value="Ace Amey"> Ace Amey</label>
+        <label class="checkbox-option"><input type="checkbox" name="captains" value="King Kaustubh"> King Kaustubh</label>
+        <label class="checkbox-option"><input type="checkbox" name="captains" value="Killer Krupal"> Killer Krupal</label>
+        <label class="checkbox-option"><input type="checkbox" name="captains" value="Smashing Shubham"> Smashing Shubham</label>
+        <label class="checkbox-option"><input type="checkbox" name="captains" value="Victorious Varun"> Victorious Varun</label>
+        <label class="checkbox-option"><input type="checkbox" name="captains" value="Valiant Vishwa"> Victory Vishwa</label>
+      </div>
+
+      <button type="submit" id="submitBtn">Submit My Vote</button>
+    </form>
+    <div class="success" id="successMessage">✅ Thank you! Your vote has been submitted successfully.</div>
+    <div class="footer">🇮🇳 Weekend Premier League • 2025</div>
+  </div>
+
+ <script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQ57FmKaJbd0pdHZg_KW4eU_uXtZ8dbPTuAYZ3iBnd-R4tqg5mwhzz_PnlXkSMdsILcA/exec";
+  const form = document.getElementById("pollForm");
+  const submitBtn = document.getElementById("submitBtn");
+  const successMsg = document.getElementById("successMessage");
+
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const selected = [...document.querySelectorAll('input[name="captains"]:checked')].map(cb => cb.value);
+
+    if (selected.length < 1 || selected.length > 3) {
+      alert("⚠️ Please select at least 1 and at most 3 captains.");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+
+    const formData = new FormData();
+    formData.append("playerName", document.getElementById("playerName").value);
+    formData.append("phoneNumber", document.getElementById("phoneNumber").value);
+    selected.forEach((captain, i) => formData.append(`captain${i+1}`, captain));
+
+    try {
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.status === "success") {
+        successMsg.style.display = "block";
+        form.reset();
+      } else {
+        alert("⚠️ Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      alert("⚠️ Network error. Please check your connection and try again.");
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Submit My Vote";
+    }
+  });
+</script>
